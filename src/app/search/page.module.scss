@@ -1,9 +1,18 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
 .header {
+    padding-bottom: 125px;
+    font-size: 35px;
+    font-weight: bold;
     text-align: center;
 }
 
-.searchContainer {
-    display: flex;
-    margin: auto;
-    width: fit-content;
+.searchInput {
+    width: 800px;
 }
