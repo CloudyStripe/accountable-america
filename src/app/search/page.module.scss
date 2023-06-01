@@ -1,0 +1,42 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.header {
+    padding-bottom: 125px;
+    font-size: 35px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.searchInput {
+    width: 800px;
+}
+
+@media(max-width: 900px){
+    .searchInput {
+        width: 650px;
+    }
+}
+
+@media(max-width: 700px){
+    .searchInput {
+        width: 500px;
+    }
+}
+
+@media(max-width: 550px){
+    .searchInput {
+        width: 400px;
+    }
+}
+
+@media(max-width: 415px){
+    .searchInput {
+        width: 350px;
+    }
+}
