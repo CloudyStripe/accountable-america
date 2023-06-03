@@ -11,9 +11,6 @@ export interface paramsObject {
 
 const Results: React.FC<paramsObject> = (props) => {
 
-    const testFunc = <T,>(test: T) => {
-
-    }
     const { params } = props;
 
     return (
