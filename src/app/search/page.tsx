@@ -7,7 +7,6 @@ import DehazeIcon from '@mui/icons-material/Dehaze';
 import Link from "next/link"
 import styles from './page.module.scss'
 
-
 const Search: React.FC = () => {
 
   const [candidate, setCandidate] = useState<string>('')
