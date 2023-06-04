@@ -18,6 +18,7 @@ const Search: React.FC = () => {
         <div className={styles.searchContainer}>
             <MaterialInput
               className={styles.searchInput}
+              id='searchInput'
               placeholder='Search for a candidate...'
               onChange={e => setCandidate(e.target.value)}
               InputProps={{
@@ -26,8 +27,9 @@ const Search: React.FC = () => {
                   <Link href={`/search/${candidate}`}>
                     <IconButton
                       aria-label='Search'
+                      id='submitButton'
                     >
-                      <SearchIcon className='submitButton'/>
+                      <SearchIcon/>
                   </IconButton>
                   </Link>
                 </InputAdornment>,
@@ -35,8 +37,9 @@ const Search: React.FC = () => {
                 <InputAdornment position='end'>
                   <IconButton
                     aria-label='Enable advanced search'
+                    id='advancedSearchButton'
                   >
-                    <DehazeIcon className='submitButton'></DehazeIcon>
+                    <DehazeIcon/>
                   </IconButton>
                 </InputAdornment>,
               }}   

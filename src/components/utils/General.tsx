@@ -1,0 +1,1 @@
+export const waitFor = (ms: number) => new Promise<void>((resolve, reject) => setTimeout(() => resolve(), ms));
