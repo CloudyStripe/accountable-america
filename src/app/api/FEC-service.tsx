@@ -1,4 +1,4 @@
-export interface FEC_candidate_search<T> {
+export interface FEC_search<T> {
     api_version: string;
     pagination: {
         count: number;
@@ -21,7 +21,6 @@ export interface FEC_candidate_search_results {
     election_years: number[];
     federal_funds_flag: boolean;
     first_file_date: string;
-    flags: string;
     has_raised_funds: boolean;
     inactive_election_years: number[]
     incumbent_challenge: string,
@@ -45,6 +44,7 @@ export interface FEC_candidate_search_principal_committees {
     committee_id: string,
     committee_type: string,
     committee_type_full: string,
+    cycles: number[];
     designation: string,
     designation_full: string,
     filing_frequency: string,
@@ -62,7 +62,6 @@ export interface FEC_candidate_search_principal_committees {
 }
 
 export const searchCandidates = async (candidate: string) => {
-
     try{
         const res = await fetch(`https://api.open.fec.gov/v1/candidates?api_key=${process.env.NEXT_PUBLIC_FEC_API_KEY}&name=${candidate}`);
         const jsonRes = await res.json();
@@ -73,5 +72,4 @@ export const searchCandidates = async (candidate: string) => {
     catch(e: any){
         return e;
     }  
-
 }
