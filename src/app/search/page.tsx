@@ -12,10 +12,6 @@ const Search: React.FC = () => {
 
   const [candidate, setCandidate] = useState<string>('')
 
-  const submitSearch = async (e: MouseEvent<HTMLButtonElement>) => {
-    const results = await searchCandidates(candidate)
-    //remove link button and insert router with results prop here
-  }
   return (
     <Container className={styles.container}>
         <div className={styles.header}>Accountable America</div>
@@ -32,7 +28,6 @@ const Search: React.FC = () => {
                     <IconButton
                       aria-label='Search'
                       id='submitButton'
-                      onClick={submitSearch}
                     >
                       <SearchIcon/>
                   </IconButton>
