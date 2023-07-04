@@ -1,9 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import styles from './page.module.scss'
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { FEC_candidate_search_results, FEC_search, searchCandidates } from '@/app/api/FEC-service';
+import { Rubik } from 'next/font/google';
 
+import styles from './page.module.scss'
+
+const rubik  = Rubik({ subsets: ['latin'] })
 export interface paramsObject {
     params: {
         candidateQuery: string;
@@ -34,29 +37,28 @@ const Results: React.FC<paramsObject> = (props) => {
 
 
     return (
-        <>
-            <div>Results</div>
+        <div id="tableContainer" className={styles.tableContainer}>
             {isLoading && (
                 <div>Loading...</div>
             )}
 
             {(!isLoading && candidateResults) && (
-                <TableContainer>
+                <TableContainer className={`${rubik.className} ${styles.table}`} component={Paper}>
                     <Table>
-                        <TableHead>
+                        <TableHead className={styles.tableHeader}>
                             <TableRow>
-                                <TableCell>
+                                <TableCell className={styles.test}>
                                     Name
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className={styles.test}>
                                     State
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className={styles.test}>
                                     Party Affiliation
                                 </TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>
+                        <TableBody className={styles.tableBody}>
                             {candidateResults.results && (
                                 candidateResults.results.map(x => (
                                     <TableRow>
@@ -70,7 +72,7 @@ const Results: React.FC<paramsObject> = (props) => {
                     </Table>
                 </TableContainer>
             )}
-        </>
+        </div>
     )
 }
 

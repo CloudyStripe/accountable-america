@@ -1,0 +1,20 @@
+.tableContainer {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.tableHeader {
+    background: linear-gradient(90deg, rgba(4,148,228,1) 20%, rgba(248,242,242,1) 65%, rgba(255,0,0,1) 100%);
+}
+
+.test {
+    font-weight: bold !important;
+}
+
+@media (min-width: 800px) {
+    .table {
+        width: 90% !important;
+        margin: auto;
+    }
+}
