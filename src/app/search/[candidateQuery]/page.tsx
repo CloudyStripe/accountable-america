@@ -39,7 +39,7 @@ const Results: React.FC<paramsObject> = (props) => {
     return (
         <div id="tableContainer" className={styles.tableContainer}>
             {isLoading && (
-                <div>Loading...</div>
+                <div id="loadingContainer">Loading...</div>
             )}
 
             {(!isLoading && candidateResults) && (
@@ -56,15 +56,19 @@ const Results: React.FC<paramsObject> = (props) => {
                                 <TableCell className={styles.test}>
                                     Party Affiliation
                                 </TableCell>
+                                <TableCell className={styles.test}>
+                                    Election Year(s)
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody className={styles.tableBody}>
                             {candidateResults.results && (
                                 candidateResults.results.map(x => (
                                     <TableRow>
-                                        <TableCell>{x.name}</TableCell>
-                                        <TableCell>{x.state}</TableCell>
-                                        <TableCell>{x.party_full}</TableCell>
+                                        <TableCell id='politicianName'>{x.name}</TableCell>
+                                        <TableCell id='politicianState'>{x.state}</TableCell>
+                                        <TableCell id='politicianParty'>{x.party_full}</TableCell>
+                                        <TableCell id='politicianCycle'>{x.election_years.map(x => `${x} `)}</TableCell>
                                     </TableRow>
                                 ))
                             )}

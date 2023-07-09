@@ -1,11 +1,10 @@
-import { render } from "@testing-library/react"
+import { render, waitFor } from "@testing-library/react"
 import Results, { paramsObject } from "../page"
-
-const mockAPI = jest.fn()
+import { searchCandidates } from "@/app/api/FEC-service";
 
 
 jest.mock('../../../api/FEC-service', () => ({
-    searchCandidates: jest.fn().mockResolvedValue([
+    searchCandidates: jest.fn().mockResolvedValue(
         {
             api_version: '1.0',
             pagination: {
@@ -79,17 +78,40 @@ jest.mock('../../../api/FEC-service', () => ({
                 }
             ]
         }
-    ]),
+    ),
 }));
 
 
 describe('Results', () => {
+    beforeEach(() => jest.clearAllMocks())
     it("Render component without any issues", () => {
         renderComponent()
 
         const el = document.getElementById('tableContainer')
         expect(el).toBeTruthy()
+    })
 
+    it("loading notification visible on render", () => {
+        renderComponent()
+
+        const el = document.getElementById('loadingContainer')
+        expect(el).toBeTruthy()
+    })
+
+    it("render component and populate table with information", async () => {
+        renderComponent()
+        await waitFor(() => expect(searchCandidates).toHaveBeenCalledTimes(1))
+
+        const nameEl = document.getElementById('politicianName') 
+        const stateEl = document.getElementById('politicianState')
+        const partyEl = document.getElementById('politicianParty')
+        const cycleEl = document.getElementById('politicianCycle')
+
+        expect(nameEl?.innerHTML).toEqual('john doe')
+        expect(stateEl?.innerHTML).toEqual('st')
+        expect(partyEl?.innerHTML).toEqual('string')
+        expect(cycleEl?.innerHTML).toEqual('0 ')
+        
     })
 
 })
