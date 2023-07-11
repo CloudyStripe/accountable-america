@@ -1,12 +1,11 @@
 'use client'
-import { MouseEvent, useState } from 'react';
+import { useState } from 'react';
 import { MaterialInput } from '@/components/material-components/material-input/MaterialInput'
 import { Container, IconButton, InputAdornment } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import Link from "next/link"
 import styles from './page.module.scss'
-import { searchCandidates } from '../api/FEC-service';
 
 const Search: React.FC = () => {
 

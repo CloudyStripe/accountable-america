@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, useMediaQuery } from '@mui/material';
 import { FEC_candidate_search_results, FEC_search, searchCandidates } from '@/app/api/FEC-service';
 import { Rubik } from 'next/font/google';
 
@@ -17,6 +17,7 @@ export interface paramsObject {
 const Results: React.FC<paramsObject> = (props) => {
 
     const { params } = props;
+    const isAbove800px = useMediaQuery('(max-width: 800px)')
     const [candidateResults, setCandidateResults] = useState<FEC_search<FEC_candidate_search_results> | null>(null)
     const [isLoading, setLoading] = useState<boolean>(true)
 
@@ -47,28 +48,32 @@ const Results: React.FC<paramsObject> = (props) => {
                     <Table>
                         <TableHead className={styles.tableHeader}>
                             <TableRow>
-                                <TableCell className={styles.test}>
+                                <TableCell className={styles.headerCell}>
                                     Name
                                 </TableCell>
-                                <TableCell className={styles.test}>
+                                <TableCell className={styles.headerCell}>
                                     State
                                 </TableCell>
-                                <TableCell className={styles.test}>
+                                <TableCell className={styles.headerCell}>
                                     Party Affiliation
                                 </TableCell>
-                                <TableCell className={styles.test}>
-                                    Election Year(s)
-                                </TableCell>
+                                {!isAbove800px && (
+                                    <TableCell className={styles.headerCell}>
+                                        Election Year(s)
+                                    </TableCell>
+                                )}
                             </TableRow>
                         </TableHead>
                         <TableBody className={styles.tableBody}>
                             {candidateResults.results && (
                                 candidateResults.results.map(x => (
                                     <TableRow>
-                                        <TableCell id='politicianName'>{x.name}</TableCell>
-                                        <TableCell id='politicianState'>{x.state}</TableCell>
-                                        <TableCell id='politicianParty'>{x.party_full}</TableCell>
-                                        <TableCell id='politicianCycle'>{x.election_years.map(x => `${x} `)}</TableCell>
+                                        <TableCell className={styles.politicalInfo} id='politicianName'>{x.name}</TableCell>
+                                        <TableCell className={styles.politicalInfo} id='politicianState'>{x.state}</TableCell>
+                                        <TableCell className={styles.politicalInfo} id='politicianParty'>{x.party_full}</TableCell>
+                                        {!isAbove800px && (
+                                            <TableCell className={styles.politicalInfo} id='politicianCycle'>{x.election_years.map(x => `${x} `)}</TableCell>
+                                        )}
                                     </TableRow>
                                 ))
                             )}
