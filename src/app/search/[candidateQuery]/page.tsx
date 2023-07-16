@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, useMediaQuery } from '@mui/material';
 import { FEC_candidate_search_results, FEC_search, searchCandidates } from '@/app/api/FEC-service';
 import { Rubik } from 'next/font/google';
-
 import styles from './page.module.scss'
+import Link from 'next/link';
 
 const rubik  = Rubik({ subsets: ['latin'] })
 export interface paramsObject {
     params: {
         candidateQuery: string;
-    }
+    },
     searchParams: {}
 }
 
@@ -68,7 +68,9 @@ const Results: React.FC<paramsObject> = (props) => {
                             {candidateResults.results && (
                                 candidateResults.results.map(x => (
                                     <TableRow>
-                                        <TableCell className={styles.politicalInfo} id='politicianName'>{x.name}</TableCell>
+                                        <Link href={`../../politician?name=${x.name}`}>
+                                            <TableCell className={styles.politicalInfo} id='politicianName'>{x.name}</TableCell>
+                                        </Link>
                                         <TableCell className={styles.politicalInfo} id='politicianState'>{x.state}</TableCell>
                                         <TableCell className={styles.politicalInfo} id='politicianParty'>{x.party_full}</TableCell>
                                         {!isAbove800px && (
