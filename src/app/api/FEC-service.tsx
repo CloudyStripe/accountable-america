@@ -61,9 +61,33 @@ export interface FEC_candidate_search_principal_committees {
     treasurer_name: string
 }
 
+export interface FEC_candidate_PAC_money {
+    candidate_name: string,
+    candidate_id: string,
+    count: number,
+    total: number,
+    committee_id: string,
+    cycle: number,
+    committee_name: string,
+    support_oppose_indicator: "S" | "O"
+}
+
 export const searchCandidates = async (candidate: string) => {
     try{
         const res = await fetch(`https://api.open.fec.gov/v1/candidates?api_key=${process.env.NEXT_PUBLIC_FEC_API_KEY}&name=${candidate}`);
+        const jsonRes = await res.json();
+        console.log(jsonRes)
+        return jsonRes;
+    }
+
+    catch(e: any){
+        return e;
+    }  
+}
+
+export const searchCandidatePacMoney = async (candidateId: string) => {
+    try{
+        const res = await fetch(`https://api.open.fec.gov/v1/schedules/schedule_e/by_candidate?election_full=true&api_key=${process.env.NEXT_PUBLIC_FEC_API_KEY}&candidate_id=${candidateId}`);
         const jsonRes = await res.json();
         console.log(jsonRes)
         return jsonRes;
