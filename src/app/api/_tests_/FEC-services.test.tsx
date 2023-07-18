@@ -1,4 +1,4 @@
-import { FEC_candidate_search_results, FEC_search, searchCandidates } from "../FEC-service";
+import { FEC_candidate_PAC_money, FEC_candidate_search_results, FEC_search, searchCandidatePacMoney, searchCandidates } from "../FEC-service";
 import fetchMock from 'jest-fetch-mock'
 
 const mockCandidates: FEC_search<FEC_candidate_search_results>[] = [
@@ -77,6 +77,31 @@ const mockCandidates: FEC_search<FEC_candidate_search_results>[] = [
     }
 ]
 
+const mockPAC: FEC_search<FEC_candidate_PAC_money>[] = [
+  {
+      api_version: '1.0',
+      pagination: {
+          count: 1,
+          page: 1,
+          pages: 1,
+          per_page: 1,
+      },
+      results: [
+          {
+             candidate_name: 'john doe',
+             candidate_id: '555',
+             count: 0,
+             cycle: 0,
+             total: 0,
+             committee_id: '1A',
+             committee_name: 'TEST',
+             support_oppose_indicator: 'O'
+             
+          }
+      ]
+  }
+]
+
 describe('FEC service', () => {
   beforeEach(() => jest.clearAllMocks())
 
@@ -88,6 +113,17 @@ describe('FEC service', () => {
 
     expect(fetchMock.mock.calls[0][0]).toContain('John');
     expect(testResults).toEqual(mockCandidates);
+    
+  })
+
+  it('should return candidate PAC money', async () => {
+
+    fetchMock.mockResponseOnce(JSON.stringify(mockPAC));
+
+    const testResults = await searchCandidatePacMoney('555')
+
+    expect(fetchMock.mock.calls[0][0]).toContain('555');
+    expect(testResults).toEqual(mockPAC);
     
   })
 
