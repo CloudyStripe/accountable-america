@@ -72,6 +72,53 @@ export interface FEC_candidate_PAC_money {
     support_oppose_indicator: "S" | "O"
 }
 
+export interface FEC_candidate_financial_summary {
+    candidate_contribution: number,
+    individual_itemized_contributions: number,
+    disbursements: number,
+    contributions: number,
+    operating_expenditures: number,
+    fundraising_disbursements: number,
+    offsets_to_fundraising_expenditures: number,
+    last_debts_owed_to_committee: number,
+    candidate_id: string,
+    coverage_end_date: string,
+    transfers_to_other_authorized_committee: number,
+    contribution_refunds: number,
+    net_operating_expenditures: number,
+    repayments_loans_made_by_candidate: number,
+    other_disbursements: number,
+    individual_unitemized_contributions: number,
+    exempt_legal_accounting_disbursement: number,
+    loans_received_from_candidate: number,
+    last_debts_owed_by_committee: number,
+    last_cash_on_hand_end_period: number,
+    net_contributions: number,
+    cycle: number,
+    total_offsets_to_operating_expenditures: number,
+    other_receipts: number,
+    last_report_type_full: string,
+    last_report_year: number,
+    loan_repayments_made: number,
+    individual_contributions: number,
+    repayments_other_loans: number
+    refunded_other_political_committee_contributions: number,
+    coverage_start_date: string,
+    other_loans_received: number,
+    offsets_to_legal_accounting: number,
+    refunded_individual_contributions: number,
+    offsets_to_operating_expenditures: number,
+    last_beginning_image_number: string,
+    other_political_committee_contributions: number,
+    refunded_political_party_committee_contributions: number,
+    candidate_election_year: number,
+    political_party_committee_contributions: number,
+    federal_funds: number,
+    receipts: number,
+    transfers_from_affiliated_committee: number
+    transaction_coverage_date: string
+}
+
 export const searchCandidates = async (candidate: string) => {
     try{
         const res = await fetch(`https://api.open.fec.gov/v1/candidates?api_key=${process.env.NEXT_PUBLIC_FEC_API_KEY}&name=${candidate}`);
@@ -88,6 +135,19 @@ export const searchCandidates = async (candidate: string) => {
 export const searchCandidatePacMoney = async (candidateId: string) => {
     try{
         const res = await fetch(`https://api.open.fec.gov/v1/schedules/schedule_e/by_candidate?election_full=true&api_key=${process.env.NEXT_PUBLIC_FEC_API_KEY}&candidate_id=${candidateId}`);
+        const jsonRes = await res.json();
+        console.log(jsonRes)
+        return jsonRes;
+    }
+
+    catch(e: any){
+        return e;
+    }  
+}
+
+export const searchCandidateSummary= async (candidateId: string) => {
+    try{
+        const res = await fetch(`https://api.open.fec.gov/v1/candidate/${candidateId}/totals?api_key=${process.env.NEXT_PUBLIC_FEC_API_KEY}`);
         const jsonRes = await res.json();
         console.log(jsonRes)
         return jsonRes;
