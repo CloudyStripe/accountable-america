@@ -1,4 +1,4 @@
-import { FEC_candidate_PAC_money, FEC_candidate_search_results, FEC_search, searchCandidatePacMoney, searchCandidates } from "../FEC-service";
+import { FEC_candidate_PAC_money, FEC_candidate_financial_summary, FEC_candidate_search_results, FEC_search, searchCandidatePacMoney, searchCandidateSummary, searchCandidates } from "../FEC-service";
 import fetchMock from 'jest-fetch-mock'
 
 const mockCandidates: FEC_search<FEC_candidate_search_results>[] = [
@@ -102,6 +102,66 @@ const mockPAC: FEC_search<FEC_candidate_PAC_money>[] = [
   }
 ]
 
+const mockSummary: FEC_search<FEC_candidate_financial_summary>[] = [
+  {
+      api_version: '1.0',
+      pagination: {
+          count: 1,
+          page: 1,
+          pages: 1,
+          per_page: 1,
+      },
+      results: [
+          {
+            candidate_contribution: 0,
+            individual_itemized_contributions: 0,
+            disbursements: 0,
+            contributions: 0,
+            operating_expenditures: 0,
+            fundraising_disbursements: 0,
+            offsets_to_fundraising_expenditures: 0,
+            last_debts_owed_to_committee: 0,
+            candidate_id: "555",
+            coverage_end_date: "2012-12-31T00:00:00+00:00",
+            transfers_to_other_authorized_committee: 0,
+            contribution_refunds: 0,
+            net_operating_expenditures: 0,
+            repayments_loans_made_by_candidate: 0,
+            last_report_year: 2016,
+            transaction_coverage_date: "2012-12-31T00:00:00+00:00",
+            repayments_other_loans: 0,
+            other_disbursements: 0,
+            individual_unitemized_contributions: 0,
+            exempt_legal_accounting_disbursement: 0,
+            loans_received_from_candidate: 0,
+            last_debts_owed_by_committee: 0,
+            last_cash_on_hand_end_period: 0,
+            net_contributions: 0,
+            cycle: 2016,
+            total_offsets_to_operating_expenditures: 0,
+            other_receipts: 0,
+            last_report_type_full: "test",
+            loan_repayments_made: 0,
+            individual_contributions: 0,
+            refunded_other_political_committee_contributions: 0,
+            coverage_start_date: "2015-04-02T00:00:00+00:0",
+            other_loans_received: 0,
+            offsets_to_legal_accounting: 0,
+            refunded_individual_contributions: 0,
+            offsets_to_operating_expenditures: 0,
+            last_beginning_image_number: "0",
+            other_political_committee_contributions: 0,
+            refunded_political_party_committee_contributions: 0,
+            candidate_election_year: 2016,
+            political_party_committee_contributions: 9303.25,
+            federal_funds: 0,
+            receipts: 0,
+            transfers_from_affiliated_committee: 0           
+          }
+      ]
+  }
+]
+
 describe('FEC service', () => {
   beforeEach(() => jest.clearAllMocks())
 
@@ -124,6 +184,17 @@ describe('FEC service', () => {
 
     expect(fetchMock.mock.calls[0][0]).toContain('555');
     expect(testResults).toEqual(mockPAC);
+    
+  })
+
+  it('should return candidate summary', async () => {
+
+    fetchMock.mockResponseOnce(JSON.stringify(mockSummary));
+
+    const testResults = await searchCandidateSummary('555')
+
+    expect(fetchMock.mock.calls[0][0]).toContain('555');
+    expect(testResults).toEqual(mockSummary);
     
   })
 
