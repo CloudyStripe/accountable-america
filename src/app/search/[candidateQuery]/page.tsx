@@ -68,7 +68,7 @@ const Results: React.FC<paramsObject> = (props) => {
                             {candidateResults.results && (
                                 candidateResults.results.map(x => (
                                     <TableRow>
-                                        <Link href={`../../politician?id=${x.candidate_id}`}>
+                                        <Link href={`../../politician?id=${x.candidate_id}&cycles=${x.cycles.join()}&party=${x.party}&name=${x.name}`}>
                                             <TableCell className={styles.politicalInfo} id='politicianName'>{x.name}</TableCell>
                                         </Link>
                                         <TableCell className={styles.politicalInfo} id='politicianState'>{x.state}</TableCell>

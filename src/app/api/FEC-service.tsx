@@ -132,9 +132,9 @@ export const searchCandidates = async (candidate: string) => {
     }  
 }
 
-export const searchCandidatePacMoney = async (candidateId: string) => {
+export const searchCandidatePacMoney = async (candidateId: string, cycle?: number) => {
     try{
-        const res = await fetch(`https://api.open.fec.gov/v1/schedules/schedule_e/by_candidate?election_full=true&api_key=${process.env.NEXT_PUBLIC_FEC_API_KEY}&candidate_id=${candidateId}`);
+        const res = await fetch(`https://api.open.fec.gov/v1/schedules/schedule_e/by_candidate?election_full=true&api_key=${process.env.NEXT_PUBLIC_FEC_API_KEY}&candidate_id=${candidateId}&cycle=${cycle}`);
         const jsonRes = await res.json();
         console.log(jsonRes)
         return jsonRes;
