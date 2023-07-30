@@ -42,7 +42,6 @@ const Results: React.FC<paramsObject> = (props) => {
             {isLoading && (
                 <div id="loadingContainer">Loading...</div>
             )}
-
             {(!isLoading && candidateResults) && (
                 <TableContainer className={`${rubik.className} ${styles.table}`} component={Paper}>
                     <Table>
