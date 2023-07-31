@@ -27,20 +27,33 @@ const Politician: React.FC<paramsPolitician> = (props) => {
   const [currentCycle, setCurrentCycle] = useState<string>(cycles[cycles.length - 1])
 
   const [totalPages, setTotalPages] = useState<number>(0)
-  const [currentPage, setCurrentPage] = useState<number>(0)
+  const [currentPage, setCurrentPage] = useState<number>(1)
 
   let totalDonations = 0;
   const donationsPerPage = 5;
 
   useEffect(() => {
+    setLoading(true)
     const searchPAC = async () => {
       const results: FEC_search<FEC_candidate_PAC_money> = await searchCandidatePacMoney(searchParams.id, +currentCycle)
       setPacResults(results.results)
     }
 
     searchPAC()
-    
+
   }, [currentCycle])
+
+  const truncateString = (name: string) => {
+    const length = 20;
+    if(!name){
+      return ''
+    }
+    if(name.length > length){
+      return (name.slice(0, length) + '...')
+    }
+    debugger;
+    return name;
+  }
 
   useEffect(() => {
     if(pacResults){
@@ -48,20 +61,24 @@ const Politician: React.FC<paramsPolitician> = (props) => {
       let startingIndex = 0;
       let endingIndex = 5
       setTotalPages(Math.ceil(totalDonations / donationsPerPage))
+      const sortedResults = pacResults.sort((a, b) => (b.total - a.total))
 
-      if(currentPage == 0){
-        setPacCollection(pacResults.slice(startingIndex, endingIndex))
+      if(currentPage == 1){
+        setPacCollection(sortedResults.slice(startingIndex, endingIndex))
       }
 
-      if(currentPage !== 0){
+      if(currentPage !== 1){
         for( let i = 1; i < currentPage; i++){
           startingIndex += 5
-          endingIndex = startingIndex + 5
         }
-        setPacCollection(pacResults.slice(startingIndex, endingIndex))
+        endingIndex = startingIndex + donationsPerPage
+        setPacCollection(sortedResults.slice(startingIndex, endingIndex))
       }
 
       setLoading(false)
+    }
+    if(pacResults && pacResults.length === 0){
+      setPacCollection(null)
     }
 
   }, [currentPage, pacResults])
@@ -83,21 +100,21 @@ const Politician: React.FC<paramsPolitician> = (props) => {
               <MenuItem value={x}>{x}</MenuItem>
             ))}
           </Select>
-          <TableContainer component={Paper}>
+          <TableContainer  component={Paper}>
             <BarChart
               xAxis={[
                 {
                   id: 'barCategories',
-                  data: pacCollection?.map(x => `${x.committee_name}`),
+                  data: pacCollection?.map(x => truncateString(x.committee_name)) || ['N/A'],
                   scaleType: 'band',
                 },
               ]}
               series={[
                 {
-                  data: [pacCollection?.[0]?.count || 0, pacCollection?.[1]?.count || 0, pacCollection?.[2]?.count || 0, pacCollection?.[3]?.count || 0, pacCollection?.[4]?.count || 0],
+                  data: pacCollection?.map(x => (x.total)) || [0]
                 },
               ]}
-              width={2000}
+              width={1500}
               height={300} />
               <Pagination count={totalPages} onChange={(e: any, page: any) => setCurrentPage(page)}></Pagination>
           </TableContainer>
