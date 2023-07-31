@@ -45,27 +45,26 @@ const Politician: React.FC<paramsPolitician> = (props) => {
   useEffect(() => {
     if(pacResults){
       totalDonations = pacResults.length
-      setTotalPages(Math.ceil(totalDonations / donationsPerPage))
-      setPacCollection(pacResults.slice(0, 5))
-      setLoading(false)
-      
-    }
-  }, [pacResults])
-
-  useEffect(() => {
-    if(pacResults){
       let startingIndex = 0;
       let endingIndex = 5
+      setTotalPages(Math.ceil(totalDonations / donationsPerPage))
 
-      for( let i = 1; i < currentPage; i++){
-        startingIndex += 5
-        endingIndex = startingIndex + 5
+      if(currentPage == 0){
+        setPacCollection(pacResults.slice(startingIndex, endingIndex))
       }
 
-      setPacCollection(pacResults.slice(startingIndex, endingIndex))
+      if(currentPage !== 0){
+        for( let i = 1; i < currentPage; i++){
+          startingIndex += 5
+          endingIndex = startingIndex + 5
+        }
+        setPacCollection(pacResults.slice(startingIndex, endingIndex))
+      }
+
+      setLoading(false)
     }
 
-  }, [currentPage])
+  }, [currentPage, pacResults])
 
   return (
 
