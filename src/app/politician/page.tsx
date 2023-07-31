@@ -36,9 +36,6 @@ const Politician: React.FC<paramsPolitician> = (props) => {
     const searchPAC = async () => {
       const results: FEC_search<FEC_candidate_PAC_money> = await searchCandidatePacMoney(searchParams.id, +currentCycle)
       setPacResults(results.results)
-      if (results) {
-        setLoading(false)
-      }
     }
 
     searchPAC()
@@ -50,6 +47,7 @@ const Politician: React.FC<paramsPolitician> = (props) => {
       totalDonations = pacResults.length
       setTotalPages(Math.ceil(totalDonations / donationsPerPage))
       setPacCollection(pacResults.slice(0, 5))
+      setLoading(false)
       
     }
   }, [pacResults])
@@ -91,16 +89,16 @@ const Politician: React.FC<paramsPolitician> = (props) => {
               xAxis={[
                 {
                   id: 'barCategories',
-                  data: ['bar A', 'bar B', 'bar C', 'bar D', 'bar E'],
+                  data: pacCollection?.map(x => `${x.committee_name}`),
                   scaleType: 'band',
                 },
               ]}
               series={[
                 {
-                  data: [2, 5, 3, 4, 5],
+                  data: [pacCollection?.[0]?.count || 0, pacCollection?.[1]?.count || 0, pacCollection?.[2]?.count || 0, pacCollection?.[3]?.count || 0, pacCollection?.[4]?.count || 0],
                 },
               ]}
-              width={500}
+              width={2000}
               height={300} />
               <Pagination count={totalPages} onChange={(e: any, page: any) => setCurrentPage(page)}></Pagination>
           </TableContainer>
