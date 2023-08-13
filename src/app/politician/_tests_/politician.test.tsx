@@ -17,6 +17,9 @@ const renderComponent = () => {
     const defaultProps: paramsPolitician = {
         params: { },
         searchParams: {
+            id: 'AB1000',
+            cycles: '2010, 2012',
+            party: 'I',
             name: 'John Doe'
         }
     }

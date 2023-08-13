@@ -1,9 +1,9 @@
 'use client'
 import { MenuItem, Pagination, Paper, Select, TableContainer } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
-import styles from './page.module.css'
 import { useEffect, useState } from "react";
 import { FEC_candidate_PAC_money, FEC_search, searchCandidatePacMoney } from "../api/FEC-service";
+import './politician.scss'
 
 export interface paramsPolitician {
   params: {},
@@ -51,7 +51,6 @@ const Politician: React.FC<paramsPolitician> = (props) => {
     if(name.length > length){
       return (name.slice(0, length) + '...')
     }
-    debugger;
     return name;
   }
 
@@ -85,7 +84,7 @@ const Politician: React.FC<paramsPolitician> = (props) => {
 
   return (
 
-    <div id="tableContainer" className={styles.tableContainer}>
+    <div id="tableContainer" className='tableContainer'>
       {isLoading && (
         <div id="loadingContainer">Loading...</div>
       )}
@@ -95,28 +94,30 @@ const Politician: React.FC<paramsPolitician> = (props) => {
           <Select
             onChange={e => setCurrentCycle(e.target.value as string)}
             value={currentCycle}
-            >
+          >
             {cycles.map(x => (
               <MenuItem value={x}>{x}</MenuItem>
             ))}
           </Select>
-          <TableContainer  component={Paper}>
-            <BarChart
-              xAxis={[
-                {
-                  id: 'barCategories',
-                  data: pacCollection?.map(x => truncateString(x.committee_name)) || ['N/A'],
-                  scaleType: 'band',
-                },
-              ]}
-              series={[
-                {
-                  data: pacCollection?.map(x => (x.total)) || [0]
-                },
-              ]}
-              width={1500}
-              height={300} />
+          <TableContainer component={Paper}>
+            <div className='bigDonorGraphContainer'>
+              <BarChart
+                xAxis={[
+                  {
+                    id: 'barCategories',
+                    data: pacCollection?.map(x => truncateString(x.committee_name)) || ['N/A'],
+                    scaleType: 'band'
+                  }
+                ]}
+                series={[
+                  {
+                    data: pacCollection?.map(x => (x.total)) || [0]
+                  },
+                ]}
+                width={1200}
+                height={300} />
               <Pagination count={totalPages} onChange={(e: any, page: any) => setCurrentPage(page)}></Pagination>
+            </div>
           </TableContainer>
         </>
       )}
