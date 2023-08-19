@@ -18,8 +18,8 @@ export interface paramsPolitician {
 const Politician: React.FC<paramsPolitician> = (props) => {
 
   const { searchParams } = props
-  const cycles = searchParams.cycles.split(',')
 
+  const cycles = searchParams.cycles.split(',')
 
   const [pacResults, setPacResults] = useState<Array<FEC_candidate_PAC_money> | null>(null)
   const [pacCollection, setPacCollection] = useState<Array<FEC_candidate_PAC_money> | null>(null)
@@ -42,17 +42,6 @@ const Politician: React.FC<paramsPolitician> = (props) => {
     searchPAC()
 
   }, [currentCycle])
-
-  const truncateString = (name: string) => {
-    const length = 20;
-    if(!name){
-      return ''
-    }
-    if(name.length > length){
-      return (name.slice(0, length) + '...')
-    }
-    return name;
-  }
 
   useEffect(() => {
     if(pacResults){
@@ -82,15 +71,26 @@ const Politician: React.FC<paramsPolitician> = (props) => {
 
   }, [currentPage, pacResults])
 
+  const truncateString = (name: string) => {
+    const length = 20;
+    if(!name){
+      return ''
+    }
+    if(name.length > length){
+      return (name.slice(0, length) + '...')
+    }
+    return name;
+  }
+
   return (
 
     <div id="tableContainer" className='tableContainer'>
+      <h1 id="politicianName">{searchParams.name}</h1>
       {isLoading && (
         <div id="loadingContainer">Loading...</div>
       )}
       {!isLoading && (
         <>
-          <h1>{searchParams.name}</h1>
           <Select
             onChange={e => setCurrentCycle(e.target.value as string)}
             value={currentCycle}
