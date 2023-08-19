@@ -1,5 +1,5 @@
 'use client'
-import { MenuItem, Pagination, Paper, Select, TableContainer } from "@mui/material";
+import { MenuItem, Pagination, Paper, Select, TableContainer, useMediaQuery } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
 import { FEC_candidate_PAC_money, FEC_search, searchCandidatePacMoney } from "../api/FEC-service";
@@ -21,16 +21,45 @@ const Politician: React.FC<paramsPolitician> = (props) => {
 
   const cycles = searchParams.cycles.split(',')
 
+  const [groupSizeIndex, setGroupSizeIndex] = useState<number>(5)
   const [pacResults, setPacResults] = useState<Array<FEC_candidate_PAC_money> | null>(null)
   const [pacCollection, setPacCollection] = useState<Array<FEC_candidate_PAC_money> | null>(null)
   const [isLoading, setLoading] = useState<boolean>(true)
   const [currentCycle, setCurrentCycle] = useState<string>(cycles[cycles.length - 1])
+  const [width, setWidth] = useState<number>(0)
 
   const [totalPages, setTotalPages] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
 
+  const isXl = useMediaQuery('(max-width:1400px)')
+  const isL = useMediaQuery('(max-width:1200px)')
+  const isM = useMediaQuery('(max-width:900px)')
+
+  useEffect(() => {
+    const checkWidth = () => {
+      if(isM){
+        setGroupSizeIndex(2)
+        return
+      }
+      if(isL){
+        setWidth(800)
+        setGroupSizeIndex(4)
+        return
+      }    
+      if(isXl){
+        setWidth(1000)
+        setGroupSizeIndex(5)
+        return
+      }  
+      setGroupSizeIndex(5)
+      setWidth(1200)
+    }
+  
+    checkWidth()
+
+  }, [isXl, isL, isM])
+
   let totalDonations = 0;
-  const donationsPerPage = 5;
 
   useEffect(() => {
     setLoading(true)
@@ -47,8 +76,8 @@ const Politician: React.FC<paramsPolitician> = (props) => {
     if(pacResults){
       totalDonations = pacResults.length
       let startingIndex = 0;
-      let endingIndex = 5
-      setTotalPages(Math.ceil(totalDonations / donationsPerPage))
+      let endingIndex = groupSizeIndex
+      setTotalPages(Math.ceil(totalDonations / groupSizeIndex))
       const sortedResults = pacResults.sort((a, b) => (b.total - a.total))
 
       if(currentPage == 1){
@@ -57,9 +86,9 @@ const Politician: React.FC<paramsPolitician> = (props) => {
 
       if(currentPage !== 1){
         for( let i = 1; i < currentPage; i++){
-          startingIndex += 5
+          startingIndex += groupSizeIndex
         }
-        endingIndex = startingIndex + donationsPerPage
+        endingIndex = startingIndex + groupSizeIndex
         setPacCollection(sortedResults.slice(startingIndex, endingIndex))
       }
 
@@ -69,7 +98,7 @@ const Politician: React.FC<paramsPolitician> = (props) => {
       setPacCollection(null)
     }
 
-  }, [currentPage, pacResults])
+  }, [currentPage, pacResults, groupSizeIndex])
 
   const truncateString = (name: string) => {
     const length = 20;
@@ -114,7 +143,7 @@ const Politician: React.FC<paramsPolitician> = (props) => {
                     data: pacCollection?.map(x => (x.total)) || [0]
                   },
                 ]}
-                width={1200}
+                width={width}
                 height={300} />
               <Pagination count={totalPages} onChange={(e: any, page: any) => setCurrentPage(page)}></Pagination>
             </div>

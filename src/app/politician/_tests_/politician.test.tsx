@@ -1,7 +1,6 @@
 import { render, waitFor } from "@testing-library/react"
 import Politician, { paramsPolitician } from "../page"
 import { FEC_candidate_PAC_money, FEC_search } from "../../api/FEC-service"
-import { wait } from "@/components/utils/General"
 
 const mockPolitician: FEC_search<FEC_candidate_PAC_money> = {
     api_version: '1.0',
