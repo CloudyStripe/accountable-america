@@ -1,9 +1,12 @@
 'use client'
 import { MenuItem, Pagination, Paper, Select, TableContainer, useMediaQuery } from "@mui/material";
-import { BarChart } from "@mui/x-charts";
-import { useEffect, useState } from "react";
+import { BarChart, ChartsTooltipProps } from "@mui/x-charts";
+import { ElementType, useEffect, useState } from "react";
 import { FEC_candidate_PAC_money, FEC_search, searchCandidatePacMoney } from "../api/FEC-service";
 import './politician.scss'
+import { ChartsItemContentProps } from "@mui/x-charts/ChartsTooltip/ChartsItemTooltipContent";
+import { ChartsTooltipClasses } from "@mui/x-charts/ChartsTooltip/tooltipClasses";
+import { ChartsAxisContentProps } from "@mui/x-charts/ChartsTooltip/ChartsAxisTooltipContent";
 
 export interface paramsPolitician {
   params: {},
@@ -111,6 +114,20 @@ const Politician: React.FC<paramsPolitician> = (props) => {
     return name;
   }
 
+  const Test: ElementType<ChartsAxisContentProps> = (props) => {
+    
+    const { axisData, classes, ...rest } = props;
+
+    return <div>HELLO</div>
+  }
+
+  const CustomTooltipContent: ElementType<ChartsAxisContentProps> = (props) => {
+    return(
+      <Test {...props} />
+    )
+};
+
+  
   return (
 
     <div id="tableContainer" className='tableContainer'>
@@ -143,6 +160,7 @@ const Politician: React.FC<paramsPolitician> = (props) => {
                     data: pacCollection?.map(x => (x.total)) || [0]
                   },
                 ]}
+                tooltip={{trigger: 'axis', axisContent: CustomTooltipContent}}
                 width={width}
                 height={300} />
               <Pagination count={totalPages} onChange={(e: any, page: any) => setCurrentPage(page)}></Pagination>
