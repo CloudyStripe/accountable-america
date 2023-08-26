@@ -1,7 +1,6 @@
 import { render, waitFor } from "@testing-library/react"
 import Politician, { paramsPolitician } from "../page"
 import { FEC_candidate_PAC_money, FEC_search } from "../../api/FEC-service"
-import { useMediaQuery } from "@mui/material"
 
 
 const mockPolitician: FEC_search<FEC_candidate_PAC_money> = {
@@ -43,10 +42,6 @@ jest.mock('@mui/Material', () => ({
     </select>)),
     TableContainer: jest.fn(),
     useMediaQuery: jest.fn()
-}))
-
-jest.mock('@mui/x-charts', () => ({
-    BarChart: jest.fn()
 }))
 
 describe('Politician', () => {
