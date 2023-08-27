@@ -50,8 +50,8 @@ const Politician: React.FC<paramsPolitician> = (props) => {
     if (pacResults) {
       totalDonations = pacResults.length
       let startingIndex = 0;
-      let endingIndex = 5
-      setTotalPages(Math.ceil(totalDonations / 5))
+      let endingIndex = 3
+      setTotalPages(Math.ceil(totalDonations / 3))
       const sortedResults = pacResults.sort((a, b) => (b.total - a.total))
 
       if (currentPage == 1) {
@@ -60,9 +60,9 @@ const Politician: React.FC<paramsPolitician> = (props) => {
 
       if (currentPage !== 1) {
         for (let i = 1; i < currentPage; i++) {
-          startingIndex += 5
+          startingIndex += 3
         }
-        endingIndex = startingIndex + 5
+        endingIndex = startingIndex + 3
         setPacCollection(sortedResults.slice(startingIndex, endingIndex))
       }
 
@@ -107,14 +107,14 @@ const Politician: React.FC<paramsPolitician> = (props) => {
               <BarChart
                 height={500}
                 width={1000}
-                barSize={20}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 data={pacCollection?.map((x) => ({
                   name: x.committee_name,
                   total: x.total
                 }))}>
-                <XAxis dataKey="name" scale="point"></XAxis>
+                <XAxis dataKey="name" fontSize={3}></XAxis>
                 <YAxis dataKey="total"></YAxis>
+                <Bar dataKey="total" fill="#8884d8" />
               </BarChart>
               <Pagination count={totalPages} onChange={(e: any, page: any) => setCurrentPage(page)}></Pagination>
             </div>
