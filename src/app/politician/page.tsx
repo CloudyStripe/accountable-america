@@ -3,6 +3,7 @@ import { MenuItem, Pagination, Paper, Select, TableContainer, useMediaQuery } fr
 import { useEffect, useState } from "react";
 import { FEC_candidate_PAC_money, FEC_search, searchCandidatePacMoney } from "../api/FEC-service";
 import './politician.scss'
+import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
 export interface paramsPolitician {
   params: {},
@@ -25,7 +26,10 @@ const Politician: React.FC<paramsPolitician> = (props) => {
   const [isLoading, setLoading] = useState<boolean>(true)
   const [currentCycle, setCurrentCycle] = useState<string>(cycles[cycles.length - 1])
   const [width, setWidth] = useState<number>(0)
-
+  console.log([pacCollection?.map((x) => ({
+    name: x.committee_name,
+    total: x.total
+  }))])
   const [totalPages, setTotalPages] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
 
@@ -43,19 +47,19 @@ const Politician: React.FC<paramsPolitician> = (props) => {
   }, [currentCycle])
 
   useEffect(() => {
-    if(pacResults){
+    if (pacResults) {
       totalDonations = pacResults.length
       let startingIndex = 0;
       let endingIndex = 5
       setTotalPages(Math.ceil(totalDonations / 5))
       const sortedResults = pacResults.sort((a, b) => (b.total - a.total))
 
-      if(currentPage == 1){
+      if (currentPage == 1) {
         setPacCollection(sortedResults.slice(startingIndex, endingIndex))
       }
 
-      if(currentPage !== 1){
-        for( let i = 1; i < currentPage; i++){
+      if (currentPage !== 1) {
+        for (let i = 1; i < currentPage; i++) {
           startingIndex += 5
         }
         endingIndex = startingIndex + 5
@@ -64,7 +68,7 @@ const Politician: React.FC<paramsPolitician> = (props) => {
 
       setLoading(false)
     }
-    if(pacResults && pacResults.length === 0){
+    if (pacResults && pacResults.length === 0) {
       setPacCollection(null)
     }
 
@@ -72,10 +76,10 @@ const Politician: React.FC<paramsPolitician> = (props) => {
 
   const truncateString = (name: string) => {
     const length = 20;
-    if(!name){
+    if (!name) {
       return ''
     }
-    if(name.length > length){
+    if (name.length > length) {
       return (name.slice(0, length) + '...')
     }
     return name;
@@ -100,6 +104,18 @@ const Politician: React.FC<paramsPolitician> = (props) => {
           </Select>
           <TableContainer component={Paper}>
             <div className='bigDonorGraphContainer'>
+              <BarChart
+                height={500}
+                width={1000}
+                barSize={20}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                data={pacCollection?.map((x) => ({
+                  name: x.committee_name,
+                  total: x.total
+                }))}>
+                <XAxis dataKey="name" scale="point"></XAxis>
+                <YAxis dataKey="total"></YAxis>
+              </BarChart>
               <Pagination count={totalPages} onChange={(e: any, page: any) => setCurrentPage(page)}></Pagination>
             </div>
           </TableContainer>
