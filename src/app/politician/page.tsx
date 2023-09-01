@@ -3,7 +3,7 @@ import { MenuItem, Pagination, Paper, Select, TableContainer, useMediaQuery } fr
 import { useEffect, useState } from "react";
 import { FEC_candidate_PAC_money, FEC_search, searchCandidatePacMoney } from "../api/FEC-service";
 import './politician.scss'
-import { Bar, BarChart, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, Tooltip, XAxis, YAxis } from "recharts";
 
 export interface paramsPolitician {
   params: {},
@@ -25,11 +25,6 @@ const Politician: React.FC<paramsPolitician> = (props) => {
   const [pacCollection, setPacCollection] = useState<Array<FEC_candidate_PAC_money> | null>(null)
   const [isLoading, setLoading] = useState<boolean>(true)
   const [currentCycle, setCurrentCycle] = useState<string>(cycles[cycles.length - 1])
-  const [width, setWidth] = useState<number>(0)
-  console.log([pacCollection?.map((x) => ({
-    name: x.committee_name,
-    total: x.total
-  }))])
   const [totalPages, setTotalPages] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
 
@@ -105,6 +100,7 @@ const Politician: React.FC<paramsPolitician> = (props) => {
           <TableContainer component={Paper}>
             <div className='bigDonorGraphContainer'>
               <BarChart
+                barSize={75}
                 height={500}
                 width={1000}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
@@ -112,7 +108,8 @@ const Politician: React.FC<paramsPolitician> = (props) => {
                   name: x.committee_name,
                   total: x.total
                 }))}>
-                <XAxis dataKey="name" fontSize={3}></XAxis>
+                <Tooltip />
+                <XAxis dataKey="name" tickFormatter={(x => truncateString(x))} fontSize={12}></XAxis>
                 <YAxis dataKey="total"></YAxis>
                 <Bar dataKey="total" fill="#8884d8" />
               </BarChart>
