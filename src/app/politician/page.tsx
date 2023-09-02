@@ -27,6 +27,27 @@ const Politician: React.FC<paramsPolitician> = (props) => {
   const [currentCycle, setCurrentCycle] = useState<string>(cycles[cycles.length - 1])
   const [totalPages, setTotalPages] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
+  const [barGraphWidth, setBarGraphWidth] = useState<number>(0)
+  const [barCount, setBarCount] = useState<number>(0)
+
+  const isLarge = useMediaQuery('(min-width: 1100px)')
+  const isMedium = useMediaQuery('(min-width: 800px) and (max-width: 1100px)')
+  const isSmall = useMediaQuery('(max-width: 800px)')
+
+  useEffect(() => {
+    if(isLarge){  
+      setBarGraphWidth(900)
+      setBarCount(3)
+    }
+    if(isMedium){
+      setBarGraphWidth(700)
+      setBarCount(3)
+    }
+    if(isSmall){
+      setBarGraphWidth(500)
+      setBarCount(2)
+    }
+  }, [isLarge, isMedium, isSmall])
 
   let totalDonations = 0;
 
@@ -45,8 +66,8 @@ const Politician: React.FC<paramsPolitician> = (props) => {
     if (pacResults) {
       totalDonations = pacResults.length
       let startingIndex = 0;
-      let endingIndex = 3
-      setTotalPages(Math.ceil(totalDonations / 3))
+      let endingIndex = barCount
+      setTotalPages(Math.ceil(totalDonations / barCount))
       const sortedResults = pacResults.sort((a, b) => (b.total - a.total))
 
       if (currentPage == 1) {
@@ -55,9 +76,9 @@ const Politician: React.FC<paramsPolitician> = (props) => {
 
       if (currentPage !== 1) {
         for (let i = 1; i < currentPage; i++) {
-          startingIndex += 3
+          startingIndex += barCount
         }
-        endingIndex = startingIndex + 3
+        endingIndex = startingIndex + barCount
         setPacCollection(sortedResults.slice(startingIndex, endingIndex))
       }
 
@@ -67,7 +88,7 @@ const Politician: React.FC<paramsPolitician> = (props) => {
       setPacCollection(null)
     }
 
-  }, [currentPage, pacResults])
+  }, [currentPage, pacResults, barCount, barGraphWidth])
 
   const truncateString = (name: string) => {
     const length = 20;
@@ -102,7 +123,7 @@ const Politician: React.FC<paramsPolitician> = (props) => {
               <BarChart
                 barSize={75}
                 height={500}
-                width={1000}
+                width={barGraphWidth}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 data={pacCollection?.map((x) => ({
                   name: x.committee_name,
