@@ -1,6 +1,6 @@
 'use client'
 import { MenuItem, Pagination, Paper, Select, TableContainer, useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { FEC_candidate_PAC_money, FEC_search, searchCandidatePacMoney } from "../api/FEC-service";
 import './politician.scss'
 import { Bar, BarChart, Tooltip, XAxis, YAxis } from "recharts";
@@ -145,7 +145,7 @@ const Politician: React.FC<paramsPolitician> = (props) => {
                 <YAxis dataKey="total"></YAxis>
                 <Bar dataKey="total" fill="grey" />
               </BarChart>
-              <Pagination count={totalPages} onChange={(e: any, page: any) => setCurrentPage(page)}></Pagination>
+              <Pagination count={totalPages} onChange={(e: ChangeEvent<unknown>, page: number) => setCurrentPage(page)}></Pagination>
             </div>
           </TableContainer>
         </>
