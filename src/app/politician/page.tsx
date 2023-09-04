@@ -28,7 +28,9 @@ const Politician: React.FC<paramsPolitician> = (props) => {
   const [totalPages, setTotalPages] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [barGraphWidth, setBarGraphWidth] = useState<number>(0)
+  const [barGraphHeight, setBarGraphHeight] = useState<number>(0)
   const [barCount, setBarCount] = useState<number>(0)
+  const [barGraphFont, setBarGraphFont] = useState<number>(0)
 
   const isLarge = useMediaQuery('(min-width: 1100px)')
   const isMedium = useMediaQuery('(min-width: 800px) and (max-width: 1100px)')
@@ -37,15 +39,21 @@ const Politician: React.FC<paramsPolitician> = (props) => {
   useEffect(() => {
     if(isLarge){  
       setBarGraphWidth(900)
+      setBarGraphHeight(500)
       setBarCount(3)
+      setBarGraphFont(12)
     }
     if(isMedium){
       setBarGraphWidth(700)
+      setBarGraphHeight(500)
       setBarCount(3)
+      setBarGraphFont(12)
     }
     if(isSmall){
-      setBarGraphWidth(500)
+      setBarGraphWidth(400)
+      setBarGraphHeight(300)
       setBarCount(2)
+      setBarGraphFont(10)
     }
   }, [isLarge, isMedium, isSmall])
 
@@ -122,17 +130,20 @@ const Politician: React.FC<paramsPolitician> = (props) => {
             <div className='bigDonorGraphContainer'>
               <BarChart
                 barSize={75}
-                height={500}
+                height={barGraphHeight}
                 width={barGraphWidth}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 data={pacCollection?.map((x) => ({
                   name: x.committee_name,
                   total: x.total
                 }))}>
-                <Tooltip />
-                <XAxis dataKey="name" tickFormatter={(x => truncateString(x))} fontSize={12}></XAxis>
+                <Tooltip 
+                  wrapperStyle={{fontSize: barGraphFont, width: '250px'}}
+                  contentStyle={{whiteSpace: 'normal'}}
+                  />
+                <XAxis interval={0} dataKey="name" tickFormatter={(x => truncateString(x))} fontSize={barGraphFont}></XAxis>
                 <YAxis dataKey="total"></YAxis>
-                <Bar dataKey="total" fill="#8884d8" />
+                <Bar dataKey="total" fill="grey" />
               </BarChart>
               <Pagination count={totalPages} onChange={(e: any, page: any) => setCurrentPage(page)}></Pagination>
             </div>
