@@ -44,6 +44,14 @@ jest.mock('@mui/Material', () => ({
     useMediaQuery: jest.fn()
 }))
 
+jest.mock('recharts', () => ({
+    Bar: jest.fn(),
+    BarChart: jest.fn(),
+    Tooltip: jest.fn(),
+    XAxis: jest.fn(),
+    YAxis: jest.fn()
+}))
+
 describe('Politician', () => {
     beforeEach(() => jest.clearAllMocks())
 

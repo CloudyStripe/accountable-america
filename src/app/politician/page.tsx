@@ -1,8 +1,9 @@
 'use client'
 import { MenuItem, Pagination, Paper, Select, TableContainer, useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { FEC_candidate_PAC_money, FEC_search, searchCandidatePacMoney } from "../api/FEC-service";
 import './politician.scss'
+import { Bar, BarChart, Tooltip, XAxis, YAxis } from "recharts";
 
 export interface paramsPolitician {
   params: {},
@@ -24,10 +25,37 @@ const Politician: React.FC<paramsPolitician> = (props) => {
   const [pacCollection, setPacCollection] = useState<Array<FEC_candidate_PAC_money> | null>(null)
   const [isLoading, setLoading] = useState<boolean>(true)
   const [currentCycle, setCurrentCycle] = useState<string>(cycles[cycles.length - 1])
-  const [width, setWidth] = useState<number>(0)
-
   const [totalPages, setTotalPages] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
+  const [barGraphWidth, setBarGraphWidth] = useState<number>(0)
+  const [barGraphHeight, setBarGraphHeight] = useState<number>(0)
+  const [barCount, setBarCount] = useState<number>(0)
+  const [barGraphFont, setBarGraphFont] = useState<number>(0)
+
+  const isLarge = useMediaQuery('(min-width: 1100px)')
+  const isMedium = useMediaQuery('(min-width: 800px) and (max-width: 1100px)')
+  const isSmall = useMediaQuery('(max-width: 800px)')
+
+  useEffect(() => {
+    if(isLarge){  
+      setBarGraphWidth(900)
+      setBarGraphHeight(500)
+      setBarCount(3)
+      setBarGraphFont(12)
+    }
+    if(isMedium){
+      setBarGraphWidth(700)
+      setBarGraphHeight(500)
+      setBarCount(3)
+      setBarGraphFont(12)
+    }
+    if(isSmall){
+      setBarGraphWidth(400)
+      setBarGraphHeight(300)
+      setBarCount(2)
+      setBarGraphFont(10)
+    }
+  }, [isLarge, isMedium, isSmall])
 
   let totalDonations = 0;
 
@@ -43,39 +71,39 @@ const Politician: React.FC<paramsPolitician> = (props) => {
   }, [currentCycle])
 
   useEffect(() => {
-    if(pacResults){
+    if (pacResults) {
       totalDonations = pacResults.length
       let startingIndex = 0;
-      let endingIndex = 5
-      setTotalPages(Math.ceil(totalDonations / 5))
+      let endingIndex = barCount
+      setTotalPages(Math.ceil(totalDonations / barCount))
       const sortedResults = pacResults.sort((a, b) => (b.total - a.total))
 
-      if(currentPage == 1){
+      if (currentPage == 1) {
         setPacCollection(sortedResults.slice(startingIndex, endingIndex))
       }
 
-      if(currentPage !== 1){
-        for( let i = 1; i < currentPage; i++){
-          startingIndex += 5
+      if (currentPage !== 1) {
+        for (let i = 1; i < currentPage; i++) {
+          startingIndex += barCount
         }
-        endingIndex = startingIndex + 5
+        endingIndex = startingIndex + barCount
         setPacCollection(sortedResults.slice(startingIndex, endingIndex))
       }
 
       setLoading(false)
     }
-    if(pacResults && pacResults.length === 0){
+    if (pacResults && pacResults.length === 0) {
       setPacCollection(null)
     }
 
-  }, [currentPage, pacResults])
+  }, [currentPage, pacResults, barCount, barGraphWidth])
 
   const truncateString = (name: string) => {
     const length = 20;
-    if(!name){
+    if (!name) {
       return ''
     }
-    if(name.length > length){
+    if (name.length > length) {
       return (name.slice(0, length) + '...')
     }
     return name;
@@ -100,7 +128,24 @@ const Politician: React.FC<paramsPolitician> = (props) => {
           </Select>
           <TableContainer component={Paper}>
             <div className='bigDonorGraphContainer'>
-              <Pagination count={totalPages} onChange={(e: any, page: any) => setCurrentPage(page)}></Pagination>
+              <BarChart
+                barSize={75}
+                height={barGraphHeight}
+                width={barGraphWidth}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                data={pacCollection?.map((x) => ({
+                  name: x.committee_name,
+                  total: x.total
+                }))}>
+                <Tooltip 
+                  wrapperStyle={{fontSize: barGraphFont, width: '250px'}}
+                  contentStyle={{whiteSpace: 'normal'}}
+                  />
+                <XAxis interval={0} dataKey="name" tickFormatter={(x => truncateString(x))} fontSize={barGraphFont}></XAxis>
+                <YAxis dataKey="total"></YAxis>
+                <Bar dataKey="total" fill="grey" />
+              </BarChart>
+              <Pagination count={totalPages} onChange={(e: ChangeEvent<unknown>, page: number) => setCurrentPage(page)}></Pagination>
             </div>
           </TableContainer>
         </>
